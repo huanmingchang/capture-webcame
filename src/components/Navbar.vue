@@ -9,7 +9,7 @@
       </v-btn>
     </v-app-bar>
     <v-sheet id="scrolling-techniques-7">
-      <v-container style="height: 60px"> </v-container>
+      <v-container style="height: 55px"> </v-container>
     </v-sheet>
   </v-card>
 </template>
