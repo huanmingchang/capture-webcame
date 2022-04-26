@@ -4,7 +4,7 @@
     <v-main>
       <v-container fluid>
         <v-row>
-          <v-col> <ScreenPreview /> </v-col>
+          <v-col> <CameraPreview /> </v-col>
           <v-col> <v-card>right side</v-card> </v-col>
         </v-row>
       </v-container>
@@ -16,13 +16,13 @@
 
 <script>
 import Navbar from './components/Navbar.vue'
-import ScreenPreview from './components/ScreenPreview.vue'
+import CameraPreview from './components/CameraPreview.vue'
 import Footer from './components/Footer.vue'
 export default {
   name: 'App',
   components: {
     Navbar,
-    ScreenPreview,
+    CameraPreview,
     Footer,
   },
 }

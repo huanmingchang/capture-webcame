@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Screen Preview</v-card-title>
+    <v-card-title>Camera Preview</v-card-title>
     <v-card-text class="preview rounded"></v-card-text>
     <v-card-actions>
       <v-text-field
