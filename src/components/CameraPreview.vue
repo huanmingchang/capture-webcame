@@ -23,9 +23,15 @@
       <div v-if="!cameraIsOpen" class="mx-auto text-center">
         Camera unavailable now
       </div>
-      <video ref="video" v-show="cameraIsOpen" class="video mx-auto">
+      <video
+        ref="video"
+        v-show="cameraIsOpen"
+        @canplay="initCanvas()"
+        class="video mx-auto"
+      >
         Camera unavailable now
       </video>
+      <canvas ref="canvas" class="canvas mx-auto" />
     </v-card-text>
     <v-card-actions class="actions d-flex flex-row">
       <v-text-field
@@ -36,7 +42,9 @@
         v-model="text"
       ></v-text-field>
       <v-btn color="blue-grey darken-2" text> Add Text</v-btn>
-      <v-btn color="cyan darken-3" text> Take photo </v-btn>
+      <v-btn color="cyan darken-3" text @click="takePicture">
+        Take picture
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -47,12 +55,14 @@ export default {
   data() {
     return {
       video: null,
+      canvas: null,
       text: '',
       cameraIsOpen: false,
     }
   },
   mounted() {
     this.video = this.$refs.video
+    this.canvas = this.$refs.canvas
   },
   methods: {
     startCapture() {
@@ -77,12 +87,28 @@ export default {
       })
       this.cameraIsOpen = false
     },
+    initCanvas() {
+      this.canvas.setAttribute('width', this.video.videoWidth)
+      this.canvas.setAttribute('height', this.video.videoHeight)
+    },
+    takePicture() {
+      let context = this.canvas.getContext('2d')
+      context.drawImage(
+        this.video,
+        0,
+        0,
+        this.video.videoWidth,
+        this.video.videoHeight
+      )
+      this.$emit('picture-taken', this.canvas.toDataURL('image/png'))
+    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
 .preview {
+  position: relative;
   border: 1px solid #455a64;
   margin: 0 auto;
   height: 500px;
@@ -92,6 +118,10 @@ export default {
 .video {
   width: 100%;
   height: 100%;
+}
+
+.canvas {
+  display: none;
 }
 
 .actions {

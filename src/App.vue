@@ -1,15 +1,16 @@
 <template>
   <v-app>
     <Navbar />
-    <v-main>
+    <v-main class="mt-10">
       <v-container fluid>
         <v-row>
-          <v-col> <CameraPreview /> </v-col>
+          <v-col>
+            <CameraPreview @picture-taken="receivePicture($event)" />
+          </v-col>
           <v-col> <SnapShots /> </v-col>
         </v-row>
       </v-container>
     </v-main>
-
     <Footer />
   </v-app>
 </template>
@@ -26,6 +27,16 @@ export default {
     CameraPreview,
     SnapShots,
     Footer,
+  },
+  data() {
+    return {
+      imgSrc: [],
+    }
+  },
+  methods: {
+    receivePicture($event) {
+      this.imgSrc.push($event)
+    },
   },
 }
 </script>
