@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Navbar />
-    <v-main class="mt-10">
+    <v-main class="my-10">
       <v-container fluid>
         <v-row>
           <v-col>
