@@ -1,6 +1,10 @@
 <template>
   <v-card>
     <v-card-title>Camera Preview</v-card-title>
+    <div>
+      <v-btn color="cyan darken-3" text> Close Camera</v-btn>
+      <v-btn color="cyan darken-3" text> Open Camera</v-btn>
+    </div>
     <v-card-text class="preview rounded"></v-card-text>
     <v-card-actions class="actions d-flex flex-row">
       <v-text-field
