@@ -42,7 +42,12 @@
         v-model="text"
       ></v-text-field>
       <v-btn color="blue-grey darken-2" text> Add Text</v-btn>
-      <v-btn color="cyan darken-3" text @click="takePicture">
+      <v-btn
+        color="cyan darken-3"
+        text
+        @click="takePicture"
+        :disabled="!cameraIsOpen"
+      >
         Take picture
       </v-btn>
     </v-card-actions>
