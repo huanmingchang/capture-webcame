@@ -2,7 +2,6 @@
   <v-card>
     <v-card-title>SnapShots</v-card-title>
     <div>
-      <v-btn color="cyan darken-3" text @click="deleteImages"> Delete</v-btn>
       <v-btn color="cyan darken-3" text @click="clearPictures"> Clear</v-btn>
     </div>
     <v-card-text class="snapshot rounded">
@@ -67,11 +66,6 @@ export default {
         return
       }
       this.selectedId.push(id)
-    },
-    deleteImages() {
-      this.images = this.images.filter(
-        (item) => !this.selectedId.includes(item.id)
-      )
     },
   },
   created() {
