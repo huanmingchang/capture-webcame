@@ -31,7 +31,7 @@
       >
         Camera unavailable now
       </video>
-      <canvas ref="canvas" class="canvas mx-auto" />
+      <canvas v-show="showCanvas" ref="canvas" class="canvas mx-auto" />
     </v-card-text>
     <v-card-actions class="actions d-flex flex-row">
       <v-text-field
@@ -40,8 +40,17 @@
         class="mr-16"
         color="blue-grey darken-2"
         v-model="text"
+        @input="updatedText"
+        :disabled="!cameraIsOpen"
       ></v-text-field>
-      <v-btn color="blue-grey darken-2" text> Add Text</v-btn>
+      <v-btn
+        color="blue-grey darken-2"
+        text
+        :disabled="!cameraIsOpen"
+        @click="showCanvas = !showCanvas"
+      >
+        {{ !showCanvas ? 'Add Text' : 'Hide Text' }}</v-btn
+      >
       <v-btn
         color="cyan darken-3"
         text
@@ -63,11 +72,19 @@ export default {
       canvas: null,
       text: '',
       cameraIsOpen: false,
+      showCanvas: false,
     }
   },
   mounted() {
     this.video = this.$refs.video
     this.canvas = this.$refs.canvas
+  },
+  watch: {
+    text: {
+      handler: function () {
+        this.updatedText()
+      },
+    },
   },
   methods: {
     startCapture() {
@@ -105,7 +122,27 @@ export default {
         this.video.videoWidth,
         this.video.videoHeight
       )
-      this.$emit('picture-taken', this.canvas.toDataURL('image/png'))
+
+      if (this.showCanvas) {
+        context.textAlign = 'center'
+        context.font = '60px Roboto'
+        context.fillStyle = '#4CAF'
+        context.fillText(this.text, 250, 420)
+        this.$emit('picture-taken', this.canvas.toDataURL('image/png'))
+      } else {
+        this.$emit('picture-taken', this.canvas.toDataURL('image/png'))
+      }
+
+      context.clearRect(0, 0, this.canvas.width, this.canvas.height)
+      this.text = ''
+    },
+    updatedText() {
+      let context = this.canvas.getContext('2d')
+      context.clearRect(0, 0, this.canvas.width, this.canvas.height)
+      context.textAlign = 'center'
+      context.font = '60px Roboto'
+      context.fillStyle = '#4CAF'
+      context.fillText(this.text, 250, 420)
     },
   },
 }
@@ -121,12 +158,17 @@ export default {
 }
 
 .video {
+  position: relative;
   width: 100%;
   height: 100%;
 }
 
 .canvas {
-  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .actions {
