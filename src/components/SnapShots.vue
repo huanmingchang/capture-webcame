@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>SnapShots</v-card-title>
     <div>
-      <v-btn color="cyan darken-3" text> Delete</v-btn>
+      <v-btn color="cyan darken-3" text @click="deleteImages"> Delete</v-btn>
       <v-btn color="cyan darken-3" text @click="clearPictures"> Clear</v-btn>
     </div>
     <v-card-text class="snapshot rounded">
@@ -13,10 +13,15 @@
         <v-row class="image mx-auto overflow-y-auto">
           <v-col
             v-for="img in images"
-            :key="img"
+            :key="img.id"
             class="img-container col-xs-12 col-sm-12 col-md-12 col-lg-6 my-4"
           >
-            <img :src="img" class="img" />
+            <v-checkbox
+              color="primary"
+              hide-details
+              @click="selectImage(img.id)"
+            ></v-checkbox>
+            <img :src="img.url" class="img" />
           </v-col>
         </v-row>
       </div>
@@ -45,6 +50,7 @@ export default {
   data() {
     return {
       images: [],
+      selectedId: [],
     }
   },
   methods: {
@@ -53,7 +59,19 @@ export default {
     },
     clearPictures() {
       this.images = []
+      this.selectedId = []
       this.$emit('clear-pictures')
+    },
+    selectImage(id) {
+      if (this.selectedId.includes(id)) {
+        return
+      }
+      this.selectedId.push(id)
+    },
+    deleteImages() {
+      this.images = this.images.filter(
+        (item) => !this.selectedId.includes(item.id)
+      )
     },
   },
   created() {
