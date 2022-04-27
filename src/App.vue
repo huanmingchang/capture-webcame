@@ -7,7 +7,9 @@
           <v-col>
             <CameraPreview @picture-taken="receivePicture($event)" />
           </v-col>
-          <v-col> <SnapShots /> </v-col>
+          <v-col>
+            <SnapShots :imgSrc="imgSrc" @clear-pictures="clearPictures()" />
+          </v-col>
         </v-row>
       </v-container>
     </v-main>
@@ -20,6 +22,8 @@ import Navbar from './components/Navbar.vue'
 import CameraPreview from './components/CameraPreview.vue'
 import SnapShots from './components/SnapShots.vue'
 import Footer from './components/Footer.vue'
+import { v4 as uuidv4 } from 'uuid'
+
 export default {
   name: 'App',
   components: {
@@ -35,7 +39,13 @@ export default {
   },
   methods: {
     receivePicture($event) {
-      this.imgSrc.push($event)
+      this.imgSrc.push({
+        id: uuidv4(),
+        url: $event,
+      })
+    },
+    clearPictures() {
+      this.imgSrc = []
     },
   },
 }
