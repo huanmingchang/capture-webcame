@@ -22,8 +22,12 @@
       </div>
     </v-card-text>
     <v-card-actions class="actions d-flex flex-row justify-end">
-      <v-btn color="blue-grey darken-2" text> Download</v-btn>
-      <v-btn color="cyan darken-3" text> Upload </v-btn>
+      <v-btn color="blue-grey darken-2" text :disabled="images.length === 0">
+        Download</v-btn
+      >
+      <v-btn color="cyan darken-3" text :disabled="images.length === 0">
+        Upload
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
