@@ -7,7 +7,9 @@
           <v-col>
             <CameraPreview @picture-taken="receivePicture($event)" />
           </v-col>
-          <v-col> <SnapShots /> </v-col>
+          <v-col>
+            <SnapShots :imgSrc="imgSrc" @clear-pictures="clearPictures()" />
+          </v-col>
         </v-row>
       </v-container>
     </v-main>
@@ -36,6 +38,9 @@ export default {
   methods: {
     receivePicture($event) {
       this.imgSrc.push($event)
+    },
+    clearPictures() {
+      this.imgSrc = []
     },
   },
 }
