@@ -129,11 +129,9 @@ export default {
         context.fillStyle = '#4CAF'
         context.fillText(this.text, 250, 420)
         this.$emit('picture-taken', this.canvas.toDataURL('image/png'))
-        context.clearRect(0, 0, this.canvas.width, this.canvas.height)
-        this.text = ''
+      } else {
+        this.$emit('picture-taken', this.canvas.toDataURL('image/png'))
       }
-
-      this.$emit('picture-taken', this.canvas.toDataURL('image/png'))
 
       context.clearRect(0, 0, this.canvas.width, this.canvas.height)
       this.text = ''
