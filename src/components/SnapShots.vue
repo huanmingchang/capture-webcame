@@ -18,7 +18,7 @@
             <v-checkbox
               color="primary"
               hide-details
-              @click="selectImage(img.id)"
+              @click="selectImages(img)"
             ></v-checkbox>
             <img :src="img.url" class="img" />
           </v-col>
@@ -26,10 +26,20 @@
       </div>
     </v-card-text>
     <v-card-actions class="actions d-flex flex-row justify-end">
-      <v-btn color="blue-grey darken-2" text :disabled="images.length === 0">
-        Download</v-btn
+      <a
+        ref="download"
+        @click="downloadImage()"
+        :class="{
+          disabled: images.length === 0 || selectedImages.length === 0,
+        }"
       >
-      <v-btn color="cyan darken-3" text :disabled="images.length === 0">
+        DOWNLOAD</a
+      >
+      <v-btn
+        color="cyan darken-3"
+        text
+        :disabled="images.length === 0 || selectedImages.length === 0"
+      >
         Upload
       </v-btn>
     </v-card-actions>
@@ -49,7 +59,7 @@ export default {
   data() {
     return {
       images: [],
-      selectedId: [],
+      selectedImages: [],
     }
   },
   methods: {
@@ -58,14 +68,25 @@ export default {
     },
     clearPictures() {
       this.images = []
-      this.selectedId = []
+      this.selectedImages = []
       this.$emit('clear-pictures')
     },
-    selectImage(id) {
-      if (this.selectedId.includes(id)) {
-        return
+    selectImages(img) {
+      if (this.selectedImages.includes(img)) return
+
+      this.selectedImages.push(img)
+    },
+    downloadImage() {
+      if (this.selectedImages.length === 0) return
+
+      let link = document.createElement('a')
+      link.setAttribute('download', 'picture')
+      document.body.appendChild(link)
+      for (var i = 0; i < this.selectedImages.length; i++) {
+        link.setAttribute('href', this.selectedImages[i].url)
+        link.click()
       }
-      this.selectedId.push(id)
+      document.body.removeChild(link)
     },
   },
   created() {
@@ -113,5 +134,20 @@ export default {
 .img {
   max-width: 100%;
   max-height: 100%;
+}
+
+a {
+  margin-right: 1rem;
+  text-decoration: none;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #00838f !important;
+  letter-spacing: 2px !important;
+}
+
+.disabled {
+  color: rgba(0, 0, 0, 0.26) !important;
+  pointer-events: none;
+  cursor: default;
 }
 </style>
