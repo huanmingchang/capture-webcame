@@ -18,7 +18,7 @@
             <v-checkbox
               color="primary"
               hide-details
-              @click="selectImage(img.id)"
+              @click="selectImages(img)"
             ></v-checkbox>
             <img :src="img.url" class="img" />
           </v-col>
@@ -26,10 +26,23 @@
       </div>
     </v-card-text>
     <v-card-actions class="actions d-flex flex-row justify-end">
-      <v-btn color="blue-grey darken-2" text :disabled="images.length === 0">
-        Download</v-btn
+      <a
+        ref="download"
+        @click="downloadImage()"
+        :class="{
+          disabled: images.length === 0 || selectedImages.length === 0,
+        }"
       >
-      <v-btn color="cyan darken-3" text :disabled="images.length === 0">
+        DOWNLOAD</a
+      >
+      <v-btn
+        color="cyan darken-3"
+        text
+        :disabled="
+          images.length === 0 || selectedImages.length === 0 || isProcessing
+        "
+        @click="uploadImages"
+      >
         Upload
       </v-btn>
     </v-card-actions>
@@ -37,6 +50,10 @@
 </template>
 
 <script>
+/* eslint-disable */
+import { db } from '../db.js'
+import { collection, addDoc } from 'firebase/firestore'
+
 export default {
   name: 'SnapShots',
   props: {
@@ -49,23 +66,61 @@ export default {
   data() {
     return {
       images: [],
-      selectedId: [],
+      selectedImages: [],
+      isProcessing: false,
     }
   },
   methods: {
     fetchImages() {
       this.images = this.imgSrc
     },
+
+    // 清除目前所有的截圖
     clearPictures() {
       this.images = []
-      this.selectedId = []
+      this.selectedImages = []
       this.$emit('clear-pictures')
     },
-    selectImage(id) {
-      if (this.selectedId.includes(id)) {
-        return
+
+    // 選取需要的截圖
+    selectImages(img) {
+      if (this.selectedImages.includes(img)) return
+
+      this.selectedImages.push(img)
+    },
+
+    // 下載截圖
+    downloadImage() {
+      if (this.selectedImages.length === 0) return
+
+      let link = document.createElement('a')
+      link.setAttribute('download', 'picture')
+      document.body.appendChild(link)
+      for (var i = 0; i < this.selectedImages.length; i++) {
+        link.setAttribute('href', this.selectedImages[i].url)
+        link.click()
       }
-      this.selectedId.push(id)
+      document.body.removeChild(link)
+    },
+
+    //上傳截圖到 firebase database
+    async uploadImages() {
+      try {
+        const uploadImages = collection(db, 'uploadImages')
+
+        this.isProcessing = true
+
+        for (let i = 0; i < this.selectedImages.length; i++) {
+          const newDoc = await addDoc(uploadImages, this.selectedImages[i])
+        }
+
+        alert('Upload successfully')
+        this.isProcessing = false
+      } catch (error) {
+        console.log(error)
+        this.isProcessing = false
+        alert('There is something wrong. Please try again later')
+      }
     },
   },
   created() {
@@ -113,5 +168,20 @@ export default {
 .img {
   max-width: 100%;
   max-height: 100%;
+}
+
+a {
+  margin-right: 1rem;
+  text-decoration: none;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #00838f !important;
+  letter-spacing: 2px !important;
+}
+
+.disabled {
+  color: rgba(0, 0, 0, 0.26) !important;
+  pointer-events: none;
+  cursor: default;
 }
 </style>
