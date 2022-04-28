@@ -38,7 +38,10 @@
       <v-btn
         color="cyan darken-3"
         text
-        :disabled="images.length === 0 || selectedImages.length === 0"
+        :disabled="
+          images.length === 0 || selectedImages.length === 0 || isProcessing
+        "
+        @click="uploadImages"
       >
         Upload
       </v-btn>
@@ -47,6 +50,10 @@
 </template>
 
 <script>
+/* eslint-disable */
+import { db } from '../db.js'
+import { collection, addDoc } from 'firebase/firestore'
+
 export default {
   name: 'SnapShots',
   props: {
@@ -60,6 +67,7 @@ export default {
     return {
       images: [],
       selectedImages: [],
+      isProcessing: false,
     }
   },
   methods: {
@@ -87,6 +95,24 @@ export default {
         link.click()
       }
       document.body.removeChild(link)
+    },
+    async uploadImages() {
+      try {
+        const uploadImages = collection(db, 'uploadImages')
+
+        this.isProcessing = true
+
+        for (let i = 0; i < this.selectedImages.length; i++) {
+          const newDoc = await addDoc(uploadImages, this.selectedImages[i])
+        }
+
+        alert('Upload successfully')
+        this.isProcessing = false
+      } catch (error) {
+        console.log(error)
+        this.isProcessing = false
+        alert('There is something wrong. Please try again later')
+      }
     },
   },
   created() {
