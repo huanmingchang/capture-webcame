@@ -74,16 +74,22 @@ export default {
     fetchImages() {
       this.images = this.imgSrc
     },
+
+    // 清除目前所有的截圖
     clearPictures() {
       this.images = []
       this.selectedImages = []
       this.$emit('clear-pictures')
     },
+
+    // 選取需要的截圖
     selectImages(img) {
       if (this.selectedImages.includes(img)) return
 
       this.selectedImages.push(img)
     },
+
+    // 下載截圖
     downloadImage() {
       if (this.selectedImages.length === 0) return
 
@@ -96,6 +102,8 @@ export default {
       }
       document.body.removeChild(link)
     },
+
+    //上傳截圖到 firebase database
     async uploadImages() {
       try {
         const uploadImages = collection(db, 'uploadImages')

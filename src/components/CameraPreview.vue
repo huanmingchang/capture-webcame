@@ -87,6 +87,7 @@ export default {
     },
   },
   methods: {
+    // 開啟視訊鏡頭
     startCapture() {
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: false })
@@ -102,6 +103,8 @@ export default {
           )
         })
     },
+
+    // 關閉視訊鏡頭
     stopCapture() {
       let tracks = this.$refs.video.srcObject.getTracks()
       tracks.forEach((track) => {
@@ -109,10 +112,14 @@ export default {
       })
       this.cameraIsOpen = false
     },
+
+    // 設定 canvas 尺寸
     initCanvas() {
       this.canvas.setAttribute('width', this.video.videoWidth)
       this.canvas.setAttribute('height', this.video.videoHeight)
     },
+
+    // 截圖
     takePicture() {
       let context = this.canvas.getContext('2d')
       context.drawImage(
@@ -136,6 +143,8 @@ export default {
       context.clearRect(0, 0, this.canvas.width, this.canvas.height)
       this.text = ''
     },
+
+    // 根據輸入的文字內容更新在畫面上
     updatedText() {
       let context = this.canvas.getContext('2d')
       context.clearRect(0, 0, this.canvas.width, this.canvas.height)
